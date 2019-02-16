@@ -7,6 +7,8 @@ from math import log, sqrt
 import pandas as pd
 import numpy as np
 import re
+from get_all_tweets import get_all_tweets
+from datetime import datetime
 
 tweets = pd.read_csv('dataset/sentiment_tweets3.csv')
 
@@ -41,8 +43,44 @@ def process_message(message, lower_case = True, stem = True, stop_words = True, 
         words = [word for word in words if word not in sw]
     if stem:
         stemmer = PorterStemmer()
-        words = [stemmer.stem(word) for word in words]   
+        words = [stemmer.stem(word) for word in words]
     return words
+
+
+def decide_mental_state(username):
+    get_all_tweets(username)
+    data = pd.read_csv("dataset/tweets.csv")
+    tweets = data["tweet"]
+    dates = data["date"]
+    date_format = "%Y-%m-%d"
+    decision = False
+    result = [False]*len(tweets)
+    total = 0
+    for i in range(0,len(tweets)):
+        pm = process_message(tweets[i])
+        result[i] = sc_tf_idf.classify(pm)
+    x = len(dates)-1
+    now = datetime.strptime(dates[len(dates)-1],date_format)
+
+    while x>=0:
+        date = datetime.strptime(dates[x], date_format)
+        tf = [x for x in dates if (date-datetime.strptime(x, date_format)).days<7]
+        for i in tf:
+            if result[x]==True:
+                total += 1
+            else:
+                total -= 1
+        avg = total/len(tf)
+        if avg<0.5:
+            x-=1
+        elif avg>0.6:
+            decision = True
+            break
+        if (date-now).days>30:
+            decision = False
+            break
+
+    return decision
 
 class TweetClassifier(object):
     def __init__(self, trainData, method = 'tf-idf'):
@@ -93,20 +131,20 @@ class TweetClassifier(object):
             self.sum_tf_idf_depressive += self.prob_depressive[word]
         for word in self.tf_depressive:
             self.prob_depressive[word] = (self.prob_depressive[word] + 1) / (self.sum_tf_idf_depressive + len(list(self.prob_depressive.keys())))
-            
+
         for word in self.tf_positive:
             self.prob_positive[word] = (self.tf_positive[word]) * log((self.depressive_tweets + self.positive_tweets) \
                                                           / (self.idf_depressive.get(word, 0) + self.idf_positive[word]))
             self.sum_tf_idf_positive += self.prob_positive[word]
         for word in self.tf_positive:
             self.prob_positive[word] = (self.prob_positive[word] + 1) / (self.sum_tf_idf_positive + len(list(self.prob_positive.keys())))
-            
-    
-        self.prob_depressive_tweet, self.prob_positive_tweet = self.depressive_tweets / self.total_tweets, self.positive_tweets / self.total_tweets 
-                    
+
+
+        self.prob_depressive_tweet, self.prob_positive_tweet = self.depressive_tweets / self.total_tweets, self.positive_tweets / self.total_tweets
+
     def classify(self, processed_message):
         pDepressive, pPositive = 0, 0
-        for word in processed_message:                
+        for word in processed_message:
             if word in self.prob_depressive:
                 pDepressive += log(self.prob_depressive[word])
             else:
@@ -118,13 +156,13 @@ class TweetClassifier(object):
                 pPositive += log(self.prob_positive[word])
             else:
                 if self.method == 'tf-idf':
-                    pPositive -= log(self.sum_tf_idf_positive + len(list(self.prob_positive.keys()))) 
+                    pPositive -= log(self.sum_tf_idf_positive + len(list(self.prob_positive.keys())))
                 else:
                     pPositive -= log(self.positive_words + len(list(self.prob_positive.keys())))
             pDepressive += log(self.prob_depressive_tweet)
             pPositive += log(self.prob_positive_tweet)
         return pDepressive >= pPositive
-    
+
     def predict(self, testData):
         result = dict()
         for (i, message) in enumerate(testData):
@@ -154,6 +192,6 @@ sc_tf_idf.train()
 preds_tf_idf = sc_tf_idf.predict(testData['message'])
 metrics(testData['label'], preds_tf_idf)
 
-pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
-print(sc_tf_idf.classify(pm))
-
+# pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
+# print(sc_tf_idf.classify(pm))
+print(decide_mental_state(username))  #Insert username from alexa
