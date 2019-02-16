@@ -3,7 +3,6 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
 from math import log, sqrt
 import pandas as pd
 import numpy as np
@@ -42,7 +41,7 @@ def process_message(message, lower_case = True, stem = True, stop_words = True, 
         words = [word for word in words if word not in sw]
     if stem:
         stemmer = PorterStemmer()
-        words = [stemmer.stem(word) for word in words]
+        words = [stemmer.stem(word) for word in words]   
     return words
 
 class TweetClassifier(object):
@@ -94,20 +93,20 @@ class TweetClassifier(object):
             self.sum_tf_idf_depressive += self.prob_depressive[word]
         for word in self.tf_depressive:
             self.prob_depressive[word] = (self.prob_depressive[word] + 1) / (self.sum_tf_idf_depressive + len(list(self.prob_depressive.keys())))
-
+            
         for word in self.tf_positive:
             self.prob_positive[word] = (self.tf_positive[word]) * log((self.depressive_tweets + self.positive_tweets) \
                                                           / (self.idf_depressive.get(word, 0) + self.idf_positive[word]))
             self.sum_tf_idf_positive += self.prob_positive[word]
         for word in self.tf_positive:
             self.prob_positive[word] = (self.prob_positive[word] + 1) / (self.sum_tf_idf_positive + len(list(self.prob_positive.keys())))
-
-
-        self.prob_depressive_tweet, self.prob_positive_tweet = self.depressive_tweets / self.total_tweets, self.positive_tweets / self.total_tweets
-
+            
+    
+        self.prob_depressive_tweet, self.prob_positive_tweet = self.depressive_tweets / self.total_tweets, self.positive_tweets / self.total_tweets 
+                    
     def classify(self, processed_message):
         pDepressive, pPositive = 0, 0
-        for word in processed_message:
+        for word in processed_message:                
             if word in self.prob_depressive:
                 pDepressive += log(self.prob_depressive[word])
             else:
@@ -119,13 +118,13 @@ class TweetClassifier(object):
                 pPositive += log(self.prob_positive[word])
             else:
                 if self.method == 'tf-idf':
-                    pPositive -= log(self.sum_tf_idf_positive + len(list(self.prob_positive.keys())))
+                    pPositive -= log(self.sum_tf_idf_positive + len(list(self.prob_positive.keys()))) 
                 else:
                     pPositive -= log(self.positive_words + len(list(self.prob_positive.keys())))
             pDepressive += log(self.prob_depressive_tweet)
             pPositive += log(self.prob_positive_tweet)
         return pDepressive >= pPositive
-
+    
     def predict(self, testData):
         result = dict()
         for (i, message) in enumerate(testData):
@@ -157,3 +156,4 @@ metrics(testData['label'], preds_tf_idf)
 
 pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
 print(sc_tf_idf.classify(pm))
+
