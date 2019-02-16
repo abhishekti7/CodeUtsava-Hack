@@ -136,3 +136,29 @@ class TweetClassifier(object):
                 processed_message = process_message(message)
                 result[i] = int(self.classify(processed_message))
             return result
+
+def metrics(labels, predictions):
+    true_pos, true_neg, false_pos, false_neg = 0, 0, 0, 0
+    for i in range(len(labels)):
+        true_pos += int(labels.iloc[i] == 1 and predictions[i] == 1)
+        true_neg += int(labels.iloc[i] == 0 and predictions[i] == 0)
+        false_pos += int(labels.iloc[i] == 0 and predictions[i] == 1)
+        false_neg += int(labels.iloc[i] == 1 and predictions[i] == 0)
+    precision = true_pos / (true_pos + false_pos)
+    recall = true_pos / (true_pos + false_neg)
+    Fscore = 2 * precision * recall / (precision + recall)
+    accuracy = (true_pos + true_neg) / (true_pos + true_neg + false_pos + false_neg)
+
+    #print("Precision: ", precision)
+    #print("Recall: ", recall)
+    #print("F-score: ", Fscore)
+    #print("Accuracy: ", accuracy)
+
+sc_tf_idf = TweetClassifier(trainData, 'tf-idf')
+sc_tf_idf.train()
+preds_tf_idf = sc_tf_idf.predict(testData['message'])
+metrics(testData['label'], preds_tf_idf)
+
+pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
+print(sc_tf_idf.classify(pm))
+
