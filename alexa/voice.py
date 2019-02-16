@@ -38,7 +38,7 @@ def callLvl2():
     if session.attributes["Outside"] == "No":
         count = count +1
     if count>=3:
-        print(decide_mental_state("anubhavp28"))                    
+        print(decide_mental_state("anubhavp28"))
 
 def evaluate_answers():
     """This function evaluates the user's answers to the questions the skill poses if "NegativeFeeling" is called.
@@ -88,8 +88,7 @@ def evaluate_answers():
 @ask.intent('PositiveFeeling')
 def user_feels_good():
     """This function is triggered if the PositiveFeeling intent is detected. """
-    congrats = [decide_mental_state(username):
-    get_all_
+    congrats = [
         'That is so good to hear!',
         'I am happy you feel good today',
         'I am glad to hear that.',
@@ -114,12 +113,9 @@ def user_feels_bad():
     session.attributes["feeling"] = "Down"
     session.attributes["State"] = "Question 1 Answered"
     return question(condolence + "       " + "Have you gotten out of bed today?")
-decide_mental_state(username):
-    get_all_
 """ The following functions are called depending on the user's answers."""
 @ask.intent('BedYes')
-def out_of_bed():decide_mental_state(username):
-    get_all_
+def out_of_bed():
     message = random.choice([
                 'Awesome.',
                 'Good to hear!',
@@ -141,8 +137,7 @@ def not_out_of_bed():
         "It's okay."
     ])
 
-    session.attributes["State"] = "Question 2 Answered"decide_mental_state(username):
-    get_all_
+    session.attributes["State"] = "Question 2 Answered"
     session.attributes["Bed"] = "No"
     return question(message + "            " + "Have you eaten today?")
 
@@ -240,6 +235,7 @@ def outside():
     session.attributes["Outside"] = "Yes"
     session.attributes["State"] = "Suggested"
     response = evaluate_answers()
+    callLvl2()
     if response == "Good job doing all those things. When you're depressed, those little things can be the most difficult.":
         suggestion_inquiry = "Let's try something else to improve your mood."
     else:
@@ -261,6 +257,7 @@ def not_outside():
     session.attributes["Outside"] = "No"
     session.attributes["State"] = "Suggested"
     response = evaluate_answers()
+    callLvl2()
     suggestion_inquiry = "Let's also try something else to improve your mood."
     idea = ideas()
     return question(message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help.  Would you like another suggestion?")
