@@ -8,7 +8,7 @@ import random
 import os
 import requests
 import logging
-import "../app.py"
+import app
 
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
@@ -38,7 +38,11 @@ def callLvl2():
     if session.attributes["Outside"] == "No":
         count = count +1
     if count>=3:
+        print("--------------------------------------------------")
+        print(count)
+        print("--------------------------------------------------")
         print(decide_mental_state("anubhavp28"))
+
 
 def evaluate_answers():
     """This function evaluates the user's answers to the questions the skill poses if "NegativeFeeling" is called.

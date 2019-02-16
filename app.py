@@ -194,4 +194,3 @@ metrics(testData['label'], preds_tf_idf)
 
 # pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
 # print(sc_tf_idf.classify(pm))
-print(decide_mental_state(username))  #Insert username from alexa
