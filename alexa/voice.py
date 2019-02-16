@@ -8,6 +8,7 @@ import random
 import os
 import requests
 import logging
+import "../app.py"
 
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
@@ -24,6 +25,20 @@ def start_session():
 
     return question(welcome_text).reprompt(welcome_re_text)
 
+def callLvl2():
+    count=0
+    if session.attributes["Bed"] == "No":
+        count = count +1
+    if session.attributes["Eaten"] == "No":
+        count = count +1
+    if session.attributes["Showered"] == "No":
+        count = count +1
+    if session.attributes["Dressed"] == "No":
+        count = count +1
+    if session.attributes["Outside"] == "No":
+        count = count +1
+    if count>=3:
+        print(decide_mental_state("anubhavp28"))                    
 
 def evaluate_answers():
     """This function evaluates the user's answers to the questions the skill poses if "NegativeFeeling" is called.
@@ -73,7 +88,8 @@ def evaluate_answers():
 @ask.intent('PositiveFeeling')
 def user_feels_good():
     """This function is triggered if the PositiveFeeling intent is detected. """
-    congrats = [
+    congrats = [decide_mental_state(username):
+    get_all_
         'That is so good to hear!',
         'I am happy you feel good today',
         'I am glad to hear that.',
@@ -98,10 +114,12 @@ def user_feels_bad():
     session.attributes["feeling"] = "Down"
     session.attributes["State"] = "Question 1 Answered"
     return question(condolence + "       " + "Have you gotten out of bed today?")
-
+decide_mental_state(username):
+    get_all_
 """ The following functions are called depending on the user's answers."""
 @ask.intent('BedYes')
-def out_of_bed():
+def out_of_bed():decide_mental_state(username):
+    get_all_
     message = random.choice([
                 'Awesome.',
                 'Good to hear!',
@@ -123,7 +141,8 @@ def not_out_of_bed():
         "It's okay."
     ])
 
-    session.attributes["State"] = "Question 2 Answered"
+    session.attributes["State"] = "Question 2 Answered"decide_mental_state(username):
+    get_all_
     session.attributes["Bed"] = "No"
     return question(message + "            " + "Have you eaten today?")
 
@@ -448,7 +467,7 @@ def find_therapist():
         results = gc.json()['results']
         location = results[0]['geometry']['location']
         location = "{},{}".format(location['lat'], location['lng'])
-    except: 
+    except:
         logging.error('ERROR using google geocoder')
         logging.debug(gc.json())
         return statement("Sorry, I'm having trouble doing that right now. Please try again later.")
