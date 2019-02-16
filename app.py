@@ -31,4 +31,20 @@ testData['label'].value_counts()
 depressive_words = ' '.join(list(tweets[tweets['label'] == 1]['message']))
 positive_words = ' '.join(list(tweets[tweets['label'] == 0]['message']))
 
-
+def process_message(message, lower_case = True, stem = True, stop_words = True, gram = 2):
+    if lower_case:
+        message = message.lower()
+    words = word_tokenize(message)
+    words = [w for w in words if len(w) > 2]
+    if gram > 1:
+        w = []
+        for i in range(len(words) - gram + 1):
+            w += [' '.join(words[i:i + gram])]
+        return w
+    if stop_words:
+        sw = stopwords.words('english')
+        words = [word for word in words if word not in sw]
+    if stem:
+        stemmer = PorterStemmer()
+        words = [stemmer.stem(word) for word in words]
+    return words
