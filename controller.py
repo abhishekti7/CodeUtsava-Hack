@@ -127,11 +127,7 @@ def ideas():
         "Make a to-do list for this week.",
         "Prep your lunch for tomorrow.",
         "Look in a mirror and tell yourself that you are awesome.",
+        "Try some events near you."
     ]
 
     return (random.choice(ideas))
-
-
-
-
-

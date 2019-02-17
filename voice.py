@@ -10,6 +10,7 @@ import requests
 import logging
 import hehe
 import sms
+import events
 
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
@@ -246,7 +247,7 @@ def outside():
         suggestion_inquiry = "Here's an idea for an extra way to improve your mood."
         idea = ideas()
 
-    return question(message + "      " + suggestion_inquiry + "       " + count+ "       " + idea + "          " + "I hope I could help. Would you like another suggestion?")
+    return question(message + "      " + suggestion_inquiry + "        " + idea + "          " + "I hope I could help. Would you like another suggestion?")
 
 @ask.intent('OutsideNo')
 def not_outside():
@@ -264,7 +265,13 @@ def not_outside():
     count=callLvl2()
     suggestion_inquiry = "Let's also try something else to improve your mood."
     idea = ideas()
-    return question(message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help.  Would you like another suggestion?")
+    if idea=="Try some events near you.":
+        event = events.events()
+        return question(
+            message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "       " + event + "        " + "would be a good start.")
+    else:
+        return question(message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help.  Would you like another suggestion?")
+
 
 """ The following functions handle the built-in Amazon intents based on the session state. """
 @ask.intent('AMAZON.NoIntent')
@@ -335,8 +342,13 @@ def handle_no():
             response = evaluate_answers()
             suggestion_inquiry = "Let's also try something else to improve your mood."
             idea = ideas()
-            return question(
-                message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help. Anything else I can do?")
+            if idea=="Try some events near you.":
+                event = events.events()
+                return question(
+                    message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "       " + event + "        " + "would be a good start.")
+            else:
+                return question(
+                    message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help. Anything else I can do?")
         elif session.attributes["State"] == "Suggested":
             session.attributes["State"] = "AnythingElse"
             return question("Okay, I hope that helped. Anything else I can do for you?")
