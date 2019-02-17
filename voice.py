@@ -38,8 +38,7 @@ def callLvl2():
     if session.attributes["Outside"] == "No":
         count = count +1
     if count>=3:
-        #print(app.decide_mental_state("anubhavp28"))
-        return "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+        return hehe.decide_mental_state("anubhavp28")
 
 def evaluate_answers():
     """This function evaluates the user's answers to the questions the skill poses if "NegativeFeeling" is called.
@@ -261,7 +260,7 @@ def not_outside():
     count=callLvl2()
     suggestion_inquiry = "Let's also try something else to improve your mood."
     idea = ideas()
-    return question(message + "      " + response + "       " + suggestion_inquiry + "       " + count+ "       " + idea + "          " + "I hope I could help.  Would you like another suggestion?")
+    return question(message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help.  Would you like another suggestion?")
 
 """ The following functions handle the built-in Amazon intents based on the session state. """
 @ask.intent('AMAZON.NoIntent')
@@ -333,7 +332,7 @@ def handle_no():
             suggestion_inquiry = "Let's also try something else to improve your mood."
             idea = ideas()
             return question(
-                message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help. Anything else I can do?" +count)
+                message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help. Anything else I can do?")
         elif session.attributes["State"] == "Suggested":
             session.attributes["State"] = "AnythingElse"
             return question("Okay, I hope that helped. Anything else I can do for you?")
