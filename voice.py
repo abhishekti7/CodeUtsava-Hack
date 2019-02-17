@@ -9,6 +9,7 @@ import os
 import requests
 import logging
 import hehe
+import sms
 
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
@@ -38,7 +39,10 @@ def callLvl2():
     if session.attributes["Outside"] == "No":
         count = count +1
     if count>=3:
-        return hehe.decide_mental_state("anubhavp28")
+        test = hehe.decide_mental_state("anubhavp28")
+        if test == True:
+            sms.sms_help("8709519238")
+        return test
 
 def evaluate_answers():
     """This function evaluates the user's answers to the questions the skill poses if "NegativeFeeling" is called.
@@ -439,6 +443,7 @@ def suggest_ideas():
 
 @ask.intent('HotLine')
 def hot_line():
+    sms.sms_emergency("8709519238")
     return statement("""Please don't hurt yourself or anyone else. I may just be a robot, but I
     was created by a person who wants to help you and thinks you are worth it. Please call the National Suicide
     Prevention Hotline at 1-800-273-8255. They are available to  talk to you 24 hours a day, 7 days a week.
