@@ -15,6 +15,7 @@ tweets = pd.read_csv('dataset/sentiment_tweets3.csv')
 
 tweets.drop(['Unnamed: 0'], axis = 1, inplace = True)
 
+get_all_tweets("anubhavp28")
 
 totalTweets = 8000 + 2314
 trainIndex, testIndex = list(), list()
@@ -49,7 +50,6 @@ def process_message(message, lower_case = True, stem = True, stop_words = True, 
 
 
 def decide_mental_state(username):
-    get_all_tweets(username)
     data = pd.read_csv("dataset/tweets.csv")
     tweets = data["tweet"]
     dates = data["date"]
@@ -193,6 +193,5 @@ sc_tf_idf.train()
 preds_tf_idf = sc_tf_idf.predict(testData['message'])
 metrics(testData['label'], preds_tf_idf)
 
-pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
-print(sc_tf_idf.classify(pm))
-decide_mental_state("its_only_words_")
+#pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
+#print(sc_tf_idf.classify(pm))
