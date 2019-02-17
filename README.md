@@ -33,3 +33,17 @@ Our project, *'Here To Hear'* is basically an Alexa skill which runs on the Amaz
 3. **Infrastructure**:
  - Amazon API Gateway
  - AWS Lambda
+
+### How to Run:
+
+1. **Create Virtual Environment** :
+  - python3 -m virtualenv env
+  - source env/bin/activate
+2. **Install Requirements** : 
+  - pip3 install -r requirements.txt
+  - pip3 install -r requirements3.txt
+  - sudo snap install ngrok
+3. **Run voice.py** :
+  - python3 voice.py
+4.  **Run ngrok in a new terminal**
+  - ngrok http 5000
