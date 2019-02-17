@@ -1,5 +1,4 @@
-{
-  "intents": [
+"intents": [
     {
       "name": "AMAZON.StopIntent",
       "slots" : [],
@@ -299,4 +298,3 @@
       ]
     }
   ]
-}

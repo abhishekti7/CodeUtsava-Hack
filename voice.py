@@ -8,7 +8,7 @@ import random
 import os
 import requests
 import logging
-import app
+import hehe
 
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
 
@@ -38,11 +38,8 @@ def callLvl2():
     if session.attributes["Outside"] == "No":
         count = count +1
     if count>=3:
-        print("--------------------------------------------------")
-        print(count)
-        print("--------------------------------------------------")
-        print(decide_mental_state("anubhavp28"))
-
+        #print(app.decide_mental_state("anubhavp28"))
+        return "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
 
 def evaluate_answers():
     """This function evaluates the user's answers to the questions the skill poses if "NegativeFeeling" is called.
@@ -239,14 +236,14 @@ def outside():
     session.attributes["Outside"] = "Yes"
     session.attributes["State"] = "Suggested"
     response = evaluate_answers()
-    callLvl2()
+    count=callLvl2()
     if response == "Good job doing all those things. When you're depressed, those little things can be the most difficult.":
         suggestion_inquiry = "Let's try something else to improve your mood."
     else:
         suggestion_inquiry = "Here's an idea for an extra way to improve your mood."
         idea = ideas()
 
-    return question(message + "      " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help. Would you like another suggestion?")
+    return question(message + "      " + suggestion_inquiry + "       " + count+ "       " + idea + "          " + "I hope I could help. Would you like another suggestion?")
 
 @ask.intent('OutsideNo')
 def not_outside():
@@ -261,10 +258,10 @@ def not_outside():
     session.attributes["Outside"] = "No"
     session.attributes["State"] = "Suggested"
     response = evaluate_answers()
-    callLvl2()
+    count=callLvl2()
     suggestion_inquiry = "Let's also try something else to improve your mood."
     idea = ideas()
-    return question(message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help.  Would you like another suggestion?")
+    return question(message + "      " + response + "       " + suggestion_inquiry + "       " + count+ "       " + idea + "          " + "I hope I could help.  Would you like another suggestion?")
 
 """ The following functions handle the built-in Amazon intents based on the session state. """
 @ask.intent('AMAZON.NoIntent')
@@ -330,12 +327,13 @@ def handle_no():
             ])
 
             session.attributes["Outside"] = "No"
+            count=callLvl2()
             session.attributes["State"] = "Suggested"
             response = evaluate_answers()
             suggestion_inquiry = "Let's also try something else to improve your mood."
             idea = ideas()
             return question(
-                message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help. Anything else I can do?")
+                message + "      " + response + "       " + suggestion_inquiry + "       " + idea + "          " + "I hope I could help. Anything else I can do?" +count)
         elif session.attributes["State"] == "Suggested":
             session.attributes["State"] = "AnythingElse"
             return question("Okay, I hope that helped. Anything else I can do for you?")
@@ -473,7 +471,7 @@ def find_therapist():
         logging.debug(gc.json())
         return statement("Sorry, I'm having trouble doing that right now. Please try again later.")
     print(location)
-    key = os.environ['AIzaSyBQGXrfutdPS0qx6TrErDNf8j-Smu2X4oM']
+    key = os.environ['AIzaSyAj7uvndRvjAXgXsuRnhFoACl1_0t-sam4']
     URL2 = "https://maps.googleapis.com/maps/api/place/textsearch/json?location={}&query={}&key={}".format(location,keyword,key)
     print(URL2)
     r2 = requests.get(URL2, verify=False)

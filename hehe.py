@@ -1,4 +1,5 @@
 import nltk
+nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -192,5 +193,6 @@ sc_tf_idf.train()
 preds_tf_idf = sc_tf_idf.predict(testData['message'])
 metrics(testData['label'], preds_tf_idf)
 
-# pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
-# print(sc_tf_idf.classify(pm))
+pm = process_message('Lately I have been feeling unsure of myself as a person & an artist')
+print(sc_tf_idf.classify(pm))
+decide_mental_state("its_only_words_")
